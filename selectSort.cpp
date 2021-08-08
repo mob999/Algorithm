@@ -1,3 +1,5 @@
+#ifndef SELECTSORT_CPP
+#define SELECTSORT_CPP
 #include<bits\stdc++.h>
 template<typename T>
 void swap(T& a,T& b){
@@ -23,10 +25,4 @@ void selectSort(std::vector<T>& arr){
         }
     }
 }
-int main(){
-    std::vector<int> arr{5,2,3,4,56,12,4};
-    selectSort(arr);
-    for(auto i:arr){
-        std::cout<<i<<" ";
-    }
-}  
+#endif

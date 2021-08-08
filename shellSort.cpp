@@ -1,5 +1,6 @@
+#ifndef SHELLSORT_CPP
+#define SHELLSORT_CPP
 #include<vector>
-#include<iostream>
 template<typename T>
 void swap(T& a,T& b){
     T temp = a;
@@ -22,11 +23,4 @@ void shellSort(std::vector<T>& arr){
         h /= 3;
     }   
 }
-int main(){
-    std::vector<int> arr{8,7,6,5,4,3,2,1};
-    shellSort(arr);
-    for(auto i:arr){
-        std::cout<<i<<" ";
-    }
-    system("pause");
-}  
+#endif

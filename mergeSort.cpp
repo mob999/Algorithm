@@ -1,12 +1,16 @@
+#ifndef MERGESORT_CPP
+#define MERGESORT_CPP
 #include<bits\stdc++.h>
 template<typename T>
 class Merge{
     private:
-        static void merge(std::vector<T>&,int,int,int,std::vector<T> aux);
+        static void merge(std::vector<T>&, int, int, int, std::vector<T> aux);
     public:
         static void sort(std::vector<T>& arr, int, int,std::vector<T> aux);
         static void sort(std::vector<T>& arr);
+        static void sortBU(std::vector<T>& arr);
 };
+
 template<typename T>
 void Merge<T>::merge(std::vector<T>& arr,int low,int high,int mid,std::vector<T> aux){
     int i = low;
@@ -39,10 +43,4 @@ void Merge<T>::sort(std::vector<T>& arr){
     std::vector<T> aux;
     sort(arr,0,arr.size()-1,aux);
 }
-int  main(){
-    std::vector<int> arr{5,2,3,4,56,12,4};
-    Merge<int>::sort(arr);
-    for(auto i:arr){
-        std::cout<<i<<" ";
-    }
-}
+#endif
