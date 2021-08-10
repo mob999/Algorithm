@@ -16,16 +16,22 @@ public:
     SqList(unsigned n, T data, unsigned maxSize=DEFAULT_SIZE);
     SqList(std::istream&,unsigned maxSize=DEFAULT_SIZE);
     ~SqList();
+    
     void pushBack(const T& data);
     void insert(const T& data, unsigned pos);
     T erase(unsigned pos);
     unsigned size();
+    bool empty();
     T* begin();
     T* end();
     friend void print(const SqList<T>& list, std::ostream& os = std::cout){
         for(unsigned i = 0; i < list.curSize_; i++){
             os << list.val[i]<< " ";
         }
+        os << '\n';
+    }
+    T& operator [](int index){
+        return this->val[index];
     }
 };
 
@@ -66,10 +72,12 @@ SqList<T>::SqList(std::istream& is,  unsigned maxSize):curSize_(0), maxSize_(max
         pushBack(data);
     }
 }
+
 template<typename T>
 SqList<T>::~SqList(){
     delete[] val;
 }
+
 
 template<typename T>
 void SqList<T>::pushBack(const T& data){
@@ -77,7 +85,8 @@ void SqList<T>::pushBack(const T& data){
         std::cout << "List Overflow!";
         exit(0);
     }
-    val[curSize_++] = data;
+    *(val+curSize_) = data;
+    curSize_++;
 }
 
 template<typename T>
@@ -110,21 +119,41 @@ void SqList<T>::insert(const T& data, unsigned pos){
 }
 
 template<typename T>
+T SqList<T>::erase(unsigned pos){
+    if(empty()){
+        std::cout << "List Empty!";
+        exit(0);
+    }
+    if(pos < 0|| pos >= curSize_){
+        std::cout << "Postion Out Of Limit!";
+        exit(0);
+    }
+    T del = val[pos];
+    for(auto i = pos; i < curSize_; i++){
+        val[i] = val[i+1];
+    }
+    curSize_--;
+    return del;
+}
+
+template<typename T>
 unsigned SqList<T>::size(){
     return curSize_;
 }
 
-#endif
-int main(){
-    SqList<int> sq(std::cin);
-    std::cout << sq.size()<< std::endl;
-    print(sq);
-    sq.pushBack(4);
-    print(sq);
-    sq.insert(0,0);
-    print(sq);
-    sq.insert(5,5);
-    print(sq);
-    sq.insert(100,4);
-    print(sq);
+template<typename T>
+bool SqList<T>::empty(){
+    return curSize_==0;
 }
+
+template<typename T>
+T* SqList<T>::begin(){
+    return val;
+}
+
+template<typename T>
+T* SqList<T>::end(){
+    return val + curSize_;
+}
+
+#endif
