@@ -1,6 +1,7 @@
 #ifndef MAXPQOA_CPP
 #define MAXPQOA_CPP
 #include "sqList.cpp"
+
 template<typename T>
 class MaxPQOA{
 private:
@@ -8,8 +9,8 @@ private:
 public:
     MaxPQOA(unsigned max=DEFAULT_SIZE);
     MaxPQOA(std::istream&);
-    MaxPQOA(std::vector<T>&);
-    void insert(T&);
+    MaxPQOA(const std::vector<T>&);
+    void insert(const T&);
     T max();
     T delMax();
     bool empty();
@@ -20,9 +21,6 @@ public:
         }
     }
 };
-
-
-
 
 template<typename T>
 MaxPQOA<T>::MaxPQOA(unsigned max):val(max){}
@@ -36,14 +34,14 @@ MaxPQOA<T>::MaxPQOA(std::istream& is):val(){
 }
 
 template<typename T>
-MaxPQOA<T>::MaxPQOA(std::vector<T>& arr):val(){
+MaxPQOA<T>::MaxPQOA(const std::vector<T>& arr):val(){
     for(auto i : arr){
         insert(i);
     }
 }
 
 template<typename T>
-void MaxPQOA<T>::insert(T& data){
+void MaxPQOA<T>::insert(const T& data){
     if(size() == 0 ){
         val.pushBack(data);
         return;
@@ -86,7 +84,11 @@ unsigned MaxPQOA<T>::size(){
 
 #define MAIN
 int main(){
-    std::vector<int> arr{3,2,3,5,7,11};
-    MaxPQOA<int> pq(arr);
+    MaxPQOA<int> pq(std::vector<int>{1,2,3});
+    pq.insert(10);
+    pq.insert(20);
+    pq.insert(15);
+    traverse(pq);
+    pq.delMax();
     traverse(pq);
 }

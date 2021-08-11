@@ -85,15 +85,3 @@ unsigned MaxPQUA<T>::size(){
 }
 
 #endif
-
-int main(){
-    std::vector<int> b{1,2,3,4,5,6};
-    MaxPQUA<int> a(b);
-    std::cout<<a.delMax();
-    std::cout<<a.delMax();
-    std::cout<<a.max();
-    a.insert(100);
-    std::cout<<a.max();
-    a.insert(20);
-    std::cout<<a.max();
-}

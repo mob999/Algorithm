@@ -49,6 +49,9 @@ public:
     /*---------------------------------------------*/
     /* 返回并删除优先队列最大值 */
     T delMax();
+    /*---------------------------------------------*/
+    /* 遍历优先队列 */
+    friend void traverse(MaxPQBR<T>& pq, std::ostream& os=std::cout){for(auto i = pq.val.begin(); i < pq.val.end(); i++){os << *i << ' ';}}
     ~MaxPQBR()=default;
 };
 
@@ -66,13 +69,13 @@ void MaxPQBR<T>::swim(unsigned index){
 template<typename T>
 void MaxPQBR<T>::sink(unsigned index){
     while(2*index <= size() -1){
-        int father = 2*index;
-        if(father < size() && val[father] < val[father+1])
-            father++;
-        if(val[index] >= val[father])
+        int son = 2*index;
+        if(son < size() && val[son] < val[son+1])
+            son++;
+        if(val[index] >= val[son])
             break;
-        swap(val[index], val[father]);
-        index = father;
+        swap(val[index], val[son]);
+        index = son;
     }
 }
 
@@ -129,16 +132,6 @@ void swap(T& a, T& b){
     T temp = a;
     a = b;
     b = temp;
-}
-
-
-
-int main(){
-    MaxPQBR<int> pq(std::vector<int>{3,2,5,11});
-    pq.insert(10);
-    std::cout << pq.max();
-    pq.delMax();
-    std::cout << pq.max();
 }
 
 #endif
