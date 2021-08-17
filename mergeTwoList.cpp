@@ -38,6 +38,21 @@ ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
     return l3->next;
 }
 
+ListNode* mergeTwoListsRecursion(ListNode* l1, ListNode* l2){
+    if(!l1)
+        return l2;
+    if(!l2)
+        return l1;
+    if(l1->val <= l2->val){
+        l1->next = mergeTwoListsRecursion(l1->next, l2);
+        return l1;
+    }
+    else{
+        l2->next = mergeTwoListsRecursion(l1, l2->next);
+        return l2;
+    }
+}
+
 int main(){
     ListNode* n1 = new ListNode(4);
     ListNode* n2 = new ListNode(2,n1);
@@ -45,7 +60,7 @@ int main(){
     ListNode* m1 = new ListNode(3);
     ListNode* m2 = new ListNode(2,m1);
     ListNode* m3 = new ListNode(1,m2);
-    auto n = mergeTwoLists(n3,m3);
+    auto n = mergeTwoListsRecursion(n3,m3);
     while(n){
         cout << n->val << ' ';
         n = n->next;
