@@ -38,6 +38,22 @@ private:
     }
     int rank(TreeNode* x, const K& keyName);
     void delMin(TreeNode*& x);
+    void delMax(TreeNode*& x);
+    TreeNode* select(TreeNode* x ,int index){
+        if(x == nullptr) return nullptr;
+        auto t = size(x->left);
+        if(t > index) return select(x->left, index);
+        else if(t < index) return select(x->right, index-t-1);
+        else return x;
+    }
+    TreeNode* min(TreeNode* x){
+        if(x->left == nullptr) return x;
+        return min(x->left);
+    }
+    TreeNode* max(TreeNode* x){
+        if(x->rifht == nullptr) return x;
+        return max(x->right);
+    }
 public:
     BinarySearchTree(): root(nullptr) {}
     int size(){ return size(root); }
@@ -45,13 +61,19 @@ public:
     V& operator [](const K& keyName){ return get(root, keyName); }
     void insert(const K& keyName, const V& valData){ insert(root, keyName, valData); }
     bool count(const K& keyName) { return count(root, keyName); }
-    K min() { return min(root); }
-    K max() { return max(root); }
+    K min() { auto m = min(root); return m->key; }
+    K max() { auto m = max(root); return m->key; }
     K floor(const K& keyName) { auto x = floor(root, keyName); return x==nullptr?nullptr:x->key; }
     K ceiling(const K& keyName) { auto x = ceiling(root, keyName); return x==nullptr?nullptr:x->key; }
     int rank(const K& keyName) { return rank(root, keyName); }
     void delMin() { delMin(root); }
+    void delMax() { delMax(root); }
+    void del(const K& keyName);
+    K select(int index){ auto x = select(root, index); if(x == nullptr) throw std::out_of_range("select index not exist in BST"); return x->key; }
 };
+
+template<typename K, typename V>
+using bstMap = BinarySearchTree<K, V>;
 
 template<typename K, typename V>
 V& BinarySearchTree<K, V>::get(TreeNode* x, const K& keyName){
@@ -113,13 +135,77 @@ void BinarySearchTree<K, V>::delMin(TreeNode*& x){
     x->n = size(x->left) + size(x->right) + 1;
 }
 
+template<typename K, typename V>
+void BinarySearchTree<K, V>::delMax(TreeNode*& x){
+    if(x->right == nullptr){
+        if(x == root){
+            auto temp = root;
+            root = root->left;
+            delete temp;
+            temp = nullptr;
+            return;
+        }
+        delete(x);
+        x = nullptr;   
+        return; 
+    }
+    delMax(x->right);
+    x->n = size(x->left) + size(x->right) + 1;
+}
+
+template<typename K, typename V>
+void BinarySearchTree<K, V>::del(const K& keyName){
+    TreeNode* delNode = root;    // 待删除结点
+    TreeNode* preNode = nullptr; // 待删除结点的前驱结点
+    /* while:寻找键值为keyName的结点及其双亲结点 */
+    while(delNode != nullptr){
+        if(delNode->key == keyName) break;
+        preNode = delNode;
+        if(delNode->key > keyName) delNode = delNode->left;
+        else delNode = delNode->right;
+    }
+    if(delNode == nullptr) return;
+    /* 待删除结点三种情况的实现 */
+    auto temp = delNode;
+    /* 1.左右结点均不为空 */
+    if(delNode->left != nullptr && delNode->right != nullptr){
+        auto s = delNode->left; // 在待删除结点的左子树中查找最大结点
+        while(s->right){        // 作为其左子树新的前驱结点
+            temp = s;
+            s = s->right;
+        }
+        delNode->key = s->key; delNode->val = s->val; // 将新的前驱节点信息拷贝到待删除的结点上
+        if(temp != delNode)
+            temp->right = s->left; // 重接待删除结点的右子树
+        else temp->left = s->left;// 重接待删除结点的左子树
+        delete s;
+        s = nullptr;
+        return;
+    }
+    else if(delNode->right == nullptr)
+        delNode = delNode->left;
+    else if(delNode->left == nullptr)
+        delNode = delNode->right;
+    if(preNode == nullptr)
+        root = delNode;
+    else if(temp == preNode->left)
+        preNode->left = delNode;
+    else preNode->right = delNode;
+    delete temp;
+    temp = nullptr;
+}
+
+
+
 int main(){
-    BinarySearchTree<std::string, int> bst;
-    bst.insert("a", 4);
-    bst.insert("b",9);
-    bst.insert("dd",100);
-    bst.delMin();
-    std::cout <<bst.size();
+    bstMap<std::string, int> bst;
+    bst.insert("e",5);
+    bst.insert("c",3);
+    bst.insert("g",7);
+    bst.insert("d",4);
+    bst.insert("b",2);
+    bst.del("e");
+    std::cout << bst["c"];
 }
     
 // PT8SG36HK4X6
