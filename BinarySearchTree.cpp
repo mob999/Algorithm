@@ -51,7 +51,7 @@ private:
         return min(x->left);
     }
     TreeNode* max(TreeNode* x){
-        if(x->rifht == nullptr) return x;
+        if(x->right == nullptr) return x;
         return max(x->right);
     }
 public:
@@ -66,7 +66,7 @@ public:
     K floor(const K& keyName) { auto x = floor(root, keyName); return x==nullptr?nullptr:x->key; }
     K ceiling(const K& keyName) { auto x = ceiling(root, keyName); return x==nullptr?nullptr:x->key; }
     int rank(const K& keyName) { return rank(root, keyName); }
-    void delMin() { delMin(root); }
+    void delMin() { delMin(root); } 
     void delMax() { delMax(root); }
     void del(const K& keyName);
     K select(int index){ auto x = select(root, index); if(x == nullptr) throw std::out_of_range("select index not exist in BST"); return x->key; }
@@ -77,12 +77,17 @@ using bstMap = BinarySearchTree<K, V>;
 
 template<typename K, typename V>
 V& BinarySearchTree<K, V>::get(TreeNode* x, const K& keyName){
-    if(x != nullptr){
-        if(x->key == keyName)
-            return x->val;
-        return x->key>keyName?get(x->left, keyName):get(x->right, keyName);
+    try{
+        if(x != nullptr){
+            if(x->key == keyName)
+                return x->val;
+            return x->key>keyName?get(x->left, keyName):get(x->right, keyName);
+        }
+        else throw std::out_of_range("key not exist in BST");
     }
-    throw std::out_of_range("key not exist in BST");
+    catch(std::out_of_range err){
+        std::cerr << err.what();
+    }
 }
 
 template<typename K, typename V>
@@ -205,7 +210,7 @@ int main(){
     bst.insert("d",4);
     bst.insert("b",2);
     bst.del("e");
-    std::cout << bst["c"];
+    
 }
     
 // PT8SG36HK4X6
